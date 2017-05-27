@@ -39,7 +39,7 @@ def naver_parser(_url):
         data = "[%3d번째 웹툰] 썸네일주소 : %s, 웹툰명 : %s, 작가명 : %s, 웹툰주소 : %s\n" % \
                 (cnt, thumb, li2[1].text.strip(), li2[2].text.strip(), 'http://comic.naver.com' + li2[1]['href'])
         tlist = "%s\n" % ("http://comic.naver.com" + li2[1]['href']+'&page=')
-        sql = "insert into mainlist(site, title, author, thumb) values('daum','"+li2[1].text.strip()+"','"+li2[2].text.strip()+"','"+thumb+"')"
+        sql = "insert into mainlist(site, title, author, thumb,main_link) values('daum','"+li2[1].text.strip()+"','"+li2[2].text.strip()+"','"+thumb+"','"+'http://comic.naver.com' + li2[1]['href']+'&page='+"')"
         curs.execute(sql)
         f.write(data)
         t.write(tlist)

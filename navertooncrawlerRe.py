@@ -33,6 +33,7 @@ def naver_parser(_url):
     stop = 1
     list2 = None
     count =0
+    breakcnt = 0
     # f = open(file_path, 'w', encoding='utf-8')
     while stop == 1:
         number += 1
@@ -44,7 +45,7 @@ def naver_parser(_url):
         if list != list2:
             for li in list:
                 # 후에 이 이프문 주소말고 조건으로 바꿔야함
-                if _url + str(number) != "http://comic.naver.com/webtoon/list.nhn?titleId=25455&weekday=tue&page="+str(number) and _url  + str(number) != 'http://comic.naver.com/webtoon/list.nhn?titleId=20853&weekday=tue&page='+str(number):
+                if _url + str(number) != "http://comic.naver.com/webtoon/list.nhn?titleId=25455&weekday=tue&page="+str(number) and _url  + str(number) != 'http://comic.naver.com/webtoon/list.nhn?titleId=20853&weekday=tue&page='+str(number) and _url + str(number)!='http://comic.naver.com/webtoon/list.nhn?titleId=318995&weekday=fri&page='+str(number):
                     if cnt < 3:
                         cnt = cnt + 1
                         continue
@@ -55,6 +56,14 @@ def naver_parser(_url):
                     print(li2, title[1].text, 'http://comic.naver.com' + href, date[3].text)
                     data = "%s, %s, %s, %s\n" % (li2, title[1].text, 'http://comic.naver.com' + href, date[3].text)
                     # 아래 sql은 제목에 '가 들어갔을경우 뻑나는걸 방지하기 위해 '''이 많음;
+                    s_sql = "select recent from mainlist where main_link ='"+_url+"'"
+                    curs.execute(s_sql)
+                    recent = curs.fetchall()
+                    print(recent[0][0])
+                    if title[1].text == recent[0][0]:
+                        breakcnt=1
+                        print("브레이크")
+                        break
                     sql = '''insert into toonlist(title, link, date) values("''' + title[
                         1].text + '''","''' + href + '''","''' + date[3].text + '''")'''
                     if count == 0:
@@ -74,6 +83,14 @@ def naver_parser(_url):
                     date = li.find_all('td')
                     print(li2, title[1].text, 'http://comic.naver.com' + href, date[3].text)
                     data = "%s, %s, %s, %s\n" % (li2, title[1].text, 'http://comic.naver.com' + href, date[3].text)
+                    s_sql = "select recent from mainlist where main_link ='" + _url + "'"
+                    curs.execute(s_sql)
+                    recent = curs.fetchall()
+                    print(recent[0][0])
+                    if title[1].text == recent[0][0]:
+                        breakcnt = 1
+                        print("브레이크")
+                        break
                     sql = '''insert into toonlist(title, link, date) values("''' + title[
                         1].text + '''","''' + href + '''","''' + date[3].text + '''")'''
                     if count == 0:
@@ -87,6 +104,8 @@ def naver_parser(_url):
         else:
             break
         list2 = list
+        if breakcnt == 1:
+            break
 
     return data
 

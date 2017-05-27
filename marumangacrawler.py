@@ -35,18 +35,38 @@ def maru_parser(_url):
     list = soup.select('div.content')
     minus = soup.select('div.gallery.bbs div')
     li = list[0].findAll('div')
-    cnt = 2
+    breakcnt=0
+    count=0
+    # cnt = 2
+    cnt = len(li) - 3 - len(minus)-1
+    # while cnt > 1 and cnt < len(li) - 3 - len(minus):
     while cnt > 1 and cnt < len(li) - 3 - len(minus):
         a = li[cnt].findAll('a')
         for go in a:
             link = go['href']
             title = go.text
             print(link, title)
+            s_sql = "select recent from mainlist where main_link ='" + _url + "'"
+            curs.execute(s_sql)
+            recent = curs.fetchall()
+            print(recent[0][0])
+            if title == recent[0][0]:
+                breakcnt = 1
+                print("브레이크")
+                break
             hwalist="%s, %s\n"% (link,  title)
-            sql = '''insert into toonlist(title, link) values("''' + go.text.strip() + '''","''' + go['href'] + '''")'''
+            if count == 0:
+                u_sql = """update mainlist set recent = '""" + title + "'" """where main_link =""" "'" + _url + "'"
+                print('--------------------------------------------------------------')
+                curs.execute(u_sql)
+            sql = '''insert into toonlist(title, link) values("''' + title.strip() + '''","''' + link.strip() + '''")'''
+
             curs.execute(sql)
             t.write(hwalist)
-        cnt += 1
+            count+=1
+        cnt -= 1
+        if breakcnt ==1:
+            break
 
     return data
 

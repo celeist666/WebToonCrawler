@@ -53,7 +53,7 @@ for i in range(0, len(urls)):
     ccnt = 1
     listbtn = browser.find_element_by_xpath('//*[@id="episodeList"]/div[3]/span/em')
     listbtn_str = listbtn.text
-
+    count=0;
     if ddlc == 0:
         WebDriverWait(browser, timeout).until(EC.visibility_of_all_elements_located((By.XPATH, "//*[@id='episodeList']/ul")))
         dlc = len(browser.find_elements_by_xpath("//*[@id='episodeList']/ul/li"))
@@ -94,6 +94,7 @@ for i in range(0, len(urls)):
                 print(cnt, thumb.get_attribute('src'), title.text, link.get_attribute('href'),
                       real_date.strftime('%Y.%m.%d'))
                 cnt += 1
+                count+=1
             else:
                 data = "[%4d번째 망가] 썸네일주소 : %s, 웹툰명 : %s, 제목 : %s, 날짜 : %s, 웹툰주소 : %s\n" % \
                        (i, thumb.get_attribute('src'), manga_title.text, title.text, date.text,
@@ -108,6 +109,7 @@ for i in range(0, len(urls)):
 
                 print(cnt, thumb.get_attribute('src'), title.text, link.get_attribute('href'), date.text)
                 cnt += 1
+                count += 1
     else:
         while ccnt <= ddlc+1:
             ddlcarray = browser.find_elements_by_xpath("//*[@id='episodeList']/div[3]/span/a")
@@ -131,6 +133,7 @@ for i in range(0, len(urls)):
             while cnt <= dlc:
                 if cnt == 1 and ccnt == 1 and urls[i]=='http://webtoon.daum.net/webtoon/view/operation':
                     cnt+=1
+                    count += 1
                     continue
                 else:
                     try:
@@ -169,6 +172,7 @@ for i in range(0, len(urls)):
                         print(cnt, thumb.get_attribute('src'), title.text, link.get_attribute('href'),
                               real_date.strftime('%Y.%m.%d'))
                         cnt += 1
+                        count += 1
                     else:
                         data = "[%4d번째 망가] 썸네일주소 : %s, 웹툰명 : %s, 제목 : %s, 날짜 : %s, 웹툰주소 : %s\n" % \
                                (i, thumb.get_attribute('src'), manga_title.text, title.text, date.text,
@@ -183,6 +187,7 @@ for i in range(0, len(urls)):
 
                         print(cnt, thumb.get_attribute('src'), title.text, link.get_attribute('href'), date.text)
                         cnt += 1
+                        count += 1
             if ccnt==ddlc+1:
                 break
             else:

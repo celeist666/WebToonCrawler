@@ -44,8 +44,8 @@ def maru_parser(_url):
                     data = "[%4d번째 망가] 썸네일주소 : %s, 웹툰명 : %s, 웹툰주소 : %s\n" % \
                            (cnt, thumb, tit[1], 'http://marumaru.in' + li2.find('a')['href'])
                     tlist = "%s\n" % ("http://marumaru.in" + li2.find('a')['href'])
-                    sql = '''insert into mainlist(site, title, thumb) values("maru","''' + tit[
-                        1].strip() + '''","''' + thumb + '''")'''
+                    sql = '''insert into mainlist(site, title, thumb,main_link) values("maru","''' + tit[
+                        1].strip() + '''","''' + thumb + '''","'''+ link + '''")'''
                     curs.execute(sql)
                     f.write(data)
                     t.write(tlist)
@@ -57,7 +57,8 @@ def maru_parser(_url):
                     data = "[%4d번째 망가] 썸네일주소 : %s, 웹툰명 : %s, 웹툰주소 : %s\n" % \
                             (cnt, thumb, tit[2].strip(), 'http://marumaru.in' + li2.find('a')['href'])
                     tlist = "%s\n" % ("http://marumaru.in" + li2.find('a')['href'])
-                    sql = '''insert into mainlist(site, title, thumb) values("maru","''' + tit[2].strip() + '''","''' + thumb + '''")'''
+                    sql = '''insert into mainlist(site, title, thumb,main_link) values("maru","''' + tit[
+                        2].strip() + '''","''' + thumb + '''","''' + link + '''")'''
                     curs.execute(sql)
                     f.write(data)
                     t.write(tlist)
