@@ -5,7 +5,10 @@ from urllib.parse import urlparse
 from datetime import datetime
 import os
 from apscheduler.schedulers.blocking import BlockingScheduler
+import pymysql
 
+conn = pymysql.connect(host='localhost', user='root', password='1111', db='moatoon', charset='utf8',autocommit=True)
+curs = conn.cursor()
 
 r = open('./marutoonlinklist.txt', 'r')
 now = datetime.now()
@@ -40,6 +43,8 @@ def maru_parser(_url):
             title = go.text
             print(link, title)
             hwalist="%s, %s\n"% (link,  title)
+            sql = '''insert into toonlist(title, link) values("''' + go.text.strip() + '''","''' + go['href'] + '''")'''
+            curs.execute(sql)
             t.write(hwalist)
         cnt += 1
 

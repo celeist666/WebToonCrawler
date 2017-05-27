@@ -4,8 +4,11 @@ from bs4 import  BeautifulSoup
 from urllib.parse import urlparse
 from datetime import datetime
 import os
+import pymysql
 from apscheduler.schedulers.blocking import BlockingScheduler
 
+conn = pymysql.connect(host='localhost', user='root', password='1111', db='moatoon', charset='utf8',autocommit=True)
+curs = conn.cursor()
 r = open('./toonlinklist.txt', 'r')
 ur = r.read()
 url1=ur.split()
@@ -39,6 +42,7 @@ def naver_parser(_url):
         data = ''
         if list != list2:
             for li in list:
+                # 후에 이 이프문 주소말고 조건으로 바꿔야함
                 if _url + str(number) != "http://comic.naver.com/webtoon/list.nhn?titleId=25455&weekday=tue&page="+str(number) and _url  + str(number) != 'http://comic.naver.com/webtoon/list.nhn?titleId=20853&weekday=tue&page='+str(number):
                     if cnt < 3:
                         cnt = cnt + 1
@@ -49,6 +53,10 @@ def naver_parser(_url):
                     date = li.find_all('td')
                     print(li2, title[1].text, 'http://comic.naver.com' + href, date[3].text)
                     data = "%s, %s, %s, %s\n" % (li2, title[1].text, 'http://comic.naver.com' + href, date[3].text)
+                    # 아래 sql은 제목에 '가 들어갔을경우 뻑나는걸 방지하기 위해 '''이 많음;
+                    sql = '''insert into toonlist(title, link, date) values("''' + title[
+                        1].text + '''","''' + href + '''","''' + date[3].text + '''")'''
+                    curs.execute(sql)
                     f.write(data)
                 else:
                     if cnt < 4:
@@ -86,6 +94,7 @@ for url in urls:
     print(parser.parse_url(url))
 f.close()
 r.close()
+conn.close()
 # 아래는 반복실행을 위한 코드
 # if __name__ == '__main__':
 #     scheduler = BlockingScheduler()

@@ -3,6 +3,10 @@ import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from datetime import datetime
+import pymysql
+
+conn = pymysql.connect(host='localhost', user='root', password='1111', db='moatoon', charset='utf8',autocommit=True)
+curs = conn.cursor()
 
 r = open('./lezhintoonlinklist.txt', 'r', encoding='UTF-8')
 # r2 = open('./lezhintoonlist01.txt', 'r', encoding='UTF-8')
@@ -50,6 +54,8 @@ for i in range(0, len(urls)):
         data = "[%4d번째 망가] 썸네일주소 : %s, 웹툰명 : %s, %s화, 제목 : %s, 날짜 : %s, 웹툰주소 : %s\n" % \
                (cnt, img, manganame, hwa, title, date, 'https://www.lezhin.com/ko/comic/devildom/' + str(cnt))
         tlist = "%s\n" % ('https://www.lezhin.com/ko/comic/devildom/' + str(cnt))
+        sql = '''insert into toonlist(thumb,title,link,date) values("''' + img + '''","''' + hwa +"화 "+title + '''","''' +'https://www.lezhin.com/ko/comic/devildom/' + str(cnt) + '''","''' +date+'''")'''
+        curs.execute(sql)
         f.write(data)
         t.write(tlist)
         cnt += 1
@@ -59,3 +65,4 @@ for i in range(0, len(urls)):
 r.close()
 f.close()
 t.close()
+conn.close()

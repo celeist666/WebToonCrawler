@@ -5,6 +5,10 @@ from urllib.parse import urlparse
 from datetime import datetime
 import os
 from apscheduler.schedulers.blocking import BlockingScheduler
+import pymysql
+
+conn = pymysql.connect(host='localhost', user='root', password='1111', db='moatoon', charset='utf8',autocommit=True)
+curs = conn.cursor()
 
 urls = [
 'http://marumaru.in/?c=1/40&p='
@@ -32,21 +36,29 @@ def maru_parser(_url):
                 # print(li2)
                 li1 = li.find_all('div')
                 thumb = li.find('img')['src']
+                link= ''
                 if len(li1[1].find('a').text.split(']')) != 3:
                     tit = li1[1].find('a').text.split(']')
                     print(cnt, thumb, tit[1], 'http://marumaru.in' + li2.find('a')['href'])
+                    link = 'http://marumaru.in' + li2.find('a')['href']
                     data = "[%4d번째 망가] 썸네일주소 : %s, 웹툰명 : %s, 웹툰주소 : %s\n" % \
                            (cnt, thumb, tit[1], 'http://marumaru.in' + li2.find('a')['href'])
                     tlist = "%s\n" % ("http://marumaru.in" + li2.find('a')['href'])
+                    sql = '''insert into mainlist(site, title, thumb) values("maru","''' + tit[
+                        1].strip() + '''","''' + thumb + '''")'''
+                    curs.execute(sql)
                     f.write(data)
                     t.write(tlist)
                     cnt = cnt + 1
                 else:
                     tit = li1[1].find('a').text.split(']')
                     print(cnt, thumb, tit[2].strip(), 'http://marumaru.in' + li2.find('a')['href'])
+                    link = 'http://marumaru.in' + li2.find('a')['href']
                     data = "[%4d번째 망가] 썸네일주소 : %s, 웹툰명 : %s, 웹툰주소 : %s\n" % \
                             (cnt, thumb, tit[2].strip(), 'http://marumaru.in' + li2.find('a')['href'])
                     tlist = "%s\n" % ("http://marumaru.in" + li2.find('a')['href'])
+                    sql = '''insert into mainlist(site, title, thumb) values("maru","''' + tit[2].strip() + '''","''' + thumb + '''")'''
+                    curs.execute(sql)
                     f.write(data)
                     t.write(tlist)
                     cnt = cnt + 1
