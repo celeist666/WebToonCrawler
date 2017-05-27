@@ -1,11 +1,15 @@
 import requests
 import urllib
+import pymysql
 from bs4 import  BeautifulSoup
 from urllib.parse import urlparse
 from datetime import datetime
 import os
 from apscheduler.schedulers.blocking import BlockingScheduler
 
+
+conn = pymysql.connect(host='localhost', user='root', password='1111', db='moatoon', charset='utf8',autocommit=True)
+curs = conn.cursor()
 urls = [
 'http://comic.naver.com/webtoon/weekdayList.nhn?week=mon',
 'http://comic.naver.com/webtoon/weekdayList.nhn?week=tue',
@@ -31,14 +35,15 @@ def naver_parser(_url):
     for li in list:
         li2 = li.find_all('a')
         thumb = li.find('img')['src']
-        print(cnt, thumb, li2[1].text.split(), li2[2].text.split(), 'http://comic.naver.com' + li2[1]['href'])
+        # print(cnt, thumb, li2[1].text.strip(), li2[2].text.strip(), 'http://comic.naver.com' + li2[1]['href'])
         data = "[%3d번째 웹툰] 썸네일주소 : %s, 웹툰명 : %s, 작가명 : %s, 웹툰주소 : %s\n" % \
-                (cnt, thumb, li2[1].text.split(), li2[2].text.split(), 'http://comic.naver.com' + li2[1]['href'])
+                (cnt, thumb, li2[1].text.strip(), li2[2].text.strip(), 'http://comic.naver.com' + li2[1]['href'])
         tlist = "%s\n" % ("http://comic.naver.com" + li2[1]['href']+'&page=')
+        sql = "insert into mainlist(site, title, author, thumb) values('daum','"+li2[1].text.strip()+"','"+li2[2].text.strip()+"','"+thumb+"')"
+        curs.execute(sql)
         f.write(data)
         t.write(tlist)
         cnt = cnt + 1
-
     return data
 
 parser_select_dict = {
@@ -60,14 +65,4 @@ for url in urls:
     print(parser.parse_url(url))
 f.close()
 t.close()
-
-# if __name__ == '__main__':
-#     scheduler = BlockingScheduler()
-#     print("START")
-#     scheduler.add_job(scraping, 'interval', seconds=10)
-#
-#     try:
-#         scheduler.start()
-#     except(KeyboardInterrupt, SystemExit):
-#         print("EXIT")
-#         pass
+conn.close()

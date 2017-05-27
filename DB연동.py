@@ -4,12 +4,12 @@ conn = pymysql.connect(host='localhost', user='root', password='1111', db='moato
 
 curs = conn.cursor()
 
-
-sql = "insert into mo(id) value('g')"
+title = 'a'
+author = 'b'
+thumb = 'c'
+sql = "insert into mainlist(site, title, author, thumb) values('daum','"+title+"','"+author+"','"+thumb+"')"
 
 curs.execute(sql)
-
-sql = 'select * from mo'
 
 curs.execute(sql)
 rows = curs.fetchall()
