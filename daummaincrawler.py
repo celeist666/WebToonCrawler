@@ -53,7 +53,7 @@ while daycount <= 7:
         data = "[%4d번째 망가] 썸네일주소 : %s, 웹툰명 : %s, 웹툰주소 : %s, 작가 : %s\n" % \
                (cnt, thumb.get_attribute('src'), title.text, link.get_attribute('href'), author.text)
         tlist = "%s\n" % link.get_attribute('href')
-        sql = '''insert into mainlist(site, title, author, thumb) values("daum","''' + title.text.strip() + '''","''' + author.text.strip() + '''","''' + thumb.get_attribute('src') + '''")'''
+        sql = '''insert into mainlist(site, title, author, thumb,main_link) values("daum","''' + title.text.strip() + '''","''' + author.text.strip() + '''","''' + thumb.get_attribute('src') + '''","''' + link.get_attribute('href') + '''")'''
         curs.execute(sql)
         f.write(data)
         t.write(tlist)
@@ -75,8 +75,8 @@ while daycount <= 7:
         data = "[%4d번째 망가] 썸네일주소 : %s, 웹툰명 : %s, 웹툰주소 : %s, 작가 : %s\n" % \
                (cnt, thumb.get_attribute('src'), title.text, link.get_attribute('href'), author.text)
         tlist = "%s\n" % link.get_attribute('href')
-        sql = '''insert into mainlist(site, title, author, thumb) values("daum","''' + title.text.strip() + '''","''' + author.text.strip() + '''","''' + thumb.get_attribute(
-            'src') + '''")'''
+        sql = '''insert into mainlist(site, title, author, thumb,main_link) values("daum","''' + title.text.strip() + '''","''' + author.text.strip() + '''","''' + thumb.get_attribute(
+            'src') + '''","''' + link.get_attribute('href') + '''")'''
         curs.execute(sql)
         f.write(data)
         t.write(tlist)
@@ -114,8 +114,8 @@ while wangyulcount <= 3:
         data = "[%4d번째 망가] 썸네일주소 : %s, 웹툰명 : %s, 웹툰주소 : %s, 작가 : %s\n" % \
                (cnt, thumb.get_attribute('src'), title.text, link.get_attribute('href'), author.text)
         tlist = "%s\n" % link.get_attribute('href')
-        sql = '''insert into mainlist(site, title, author, thumb) values("daum","''' + title.text.strip() + '''","''' + author.text.strip() + '''","''' + thumb.get_attribute(
-            'src') + '''")'''
+        sql = '''insert into mainlist(site, title, author, thumb,main_link) values("daum","''' + title.text.strip() + '''","''' + author.text.strip() + '''","''' + thumb.get_attribute(
+            'src') + '''","''' + link.get_attribute('href') + '''")'''
         curs.execute(sql)
         f.write(data)
         t.write(tlist)
